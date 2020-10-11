@@ -17,13 +17,22 @@
             android:textAlignment="center"
             tools:ignore="MissingConstraints">
 
+            <TextView
+                android:id="@+id/formula"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="50px"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="80px"></TextView>
 
             <TextView
                 android:id="@+id/result"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="50px"
-                android:text="@string/result"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="#fff"
                 android:textSize="80px"></TextView>
