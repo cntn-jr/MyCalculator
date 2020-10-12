@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     private class HelloListener implements View.OnClickListener {
         List<String> formulaList = new ArrayList<>();
+        boolean flagEqual = false;
+        boolean clearFlag = true;
+        String rsWork = "";
 
         public void onClick(View view) {
 
@@ -55,53 +58,109 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
 
-            formulaList = addTextFormula(formulaList, value);
+            if (flagEqual) {
+                for (; ; ) {
+                    formulaList.remove(formulaList.size() - 1);
+                    if (formulaList.isEmpty()) {
+                        break;
+                    }
+                }
+                if(canInt(Float.valueOf(rsWork))){
+                    rsWork = String.valueOf((int)Math.floor(Double.valueOf(String.valueOf(rsWork))));
+                }
+                formulaList.add(rsWork);
+                flagEqual = false;
+            }
+
+            formulaList = addTextFormula(formulaList, value, result, clearFlag);
             showFormula(formulaList, formula);
+
+            //=が入力された場合
+            if (value.equals("=")) {
+                if (formulaList.size() >= 3 && formulaList.size() % 2 == 1) {
+                    rsWork = showResult(formulaList, result);
+                    flagEqual = true;
+                    clearFlag = false;
+                }
+            }
 
         }
 
     }
 
-    public List<String> addTextFormula(List<String> formula, String tmp) {
+    public List<String> addTextFormula(List<String> formulaList, String tmp, TextView result, boolean clearFlag) {
         //数字が入力された場合
         if (isInt(tmp)) {
-            if (formula.size() == 0) {
+            if (formulaList.size() == 0) {
                 //空の場合
-                formula.add(tmp);
-            } else if (isFourSymbol(formula.get(formula.size() - 1))) {
+                formulaList.add(tmp);
+            } else if (isFourSymbol(formulaList.get(formulaList.size() - 1))) {
                 //最後が記号の場合
-                formula.add(tmp);
-            } else if (isInt(formula.get(formula.size() - 1))) {
+                formulaList.add(tmp);
+            } else if (clearFlag && (isInt(formulaList.get(formulaList.size() - 1)) || isFloat(formulaList.get(formulaList.size() - 1)))) {
                 //最後が数字の場合
-                formula.set(formula.size() - 1, formula.get(formula.size() - 1) + tmp);
+                formulaList.set(formulaList.size() - 1, formulaList.get(formulaList.size() - 1) + tmp);
             }
         } else if (isFourSymbol(tmp)) {
             //+,-,✕,÷が入力された場合
-            if (formula.size() == 0) {
+            if (formulaList.size() == 0) {
                 //空の場合
-            } else if (isFourSymbol(formula.get(formula.size() - 1))) {
+            } else if (isFourSymbol(formulaList.get(formulaList.size() - 1))) {
                 //最後が記号の場合
-            } else if (isInt(formula.get(formula.size() - 1))) {
+            } else if (isInt(formulaList.get(formulaList.size() - 1)) || isFloat(formulaList.get(formulaList.size() - 1))) {
                 //最後が数字の場合
-                formula.add(tmp);
+                formulaList.add(tmp);
             }
-        } else if (isEqual(tmp)) {
-            //=が入力された場合
-            if (formula.size() >= 3 && formula.size() % 2 == 1) {
-                //計算結果の表示
-                formula.clear();
-            }
+        } else {
+            //何もしない
         }
 
-        return formula;
+        return formulaList;
     }
 
+    //式の途中を見せる
     public void showFormula(List<String> formulaList, TextView fml) {
         String formula = "";
         for (String value : formulaList) {
             formula += value;
+            formula += " ";
         }
         fml.setText(formula);
+    }
+
+    //計算する
+    public String showResult(List<String> formulaList, TextView rsText) {
+        float work1, work2;
+        String sbl,rs;
+        work1 = Float.parseFloat(formulaList.get(0));
+        work2 = Float.parseFloat(formulaList.get(2));
+        sbl = formulaList.get(1);
+        work1 = calc(work1, work2, sbl);
+        for (int i = 4; i < formulaList.size(); i += 2) {
+            work2 = Float.parseFloat(formulaList.get(i));
+            sbl = formulaList.get(i + 1);
+            work1 = calc(work1, work2, sbl);
+        }
+        //int型にできるのであれば
+        if(canInt(work1)){
+            rs = String.valueOf((int)Math.floor(Double.valueOf(String.valueOf(work1))));
+        }else{
+            rs = String.valueOf(work1);
+        }
+        //文字列に変換
+        rsText.setText(rs);
+        return String.valueOf(work1);
+    }
+
+    public float calc(float work1, float work2, String sbl) {
+        switch (sbl) {
+            case "+":
+                work1 = work1 + work2;
+                break;
+            case "-":
+                break;
+        }
+        return work1;
     }
 
     public boolean isInt(String num) {
@@ -141,6 +200,15 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return false;
         }
+    }
+
+    public boolean canInt(float num){
+        double work1 = Double.parseDouble(String.valueOf(num));
+        double work2 = Math.floor(Double.parseDouble(String.valueOf(num)));
+        if(work1 - work2 == 0){
+            return  true;
+        }
+        return  false;
     }
 
 }
