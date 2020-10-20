@@ -278,11 +278,12 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean canInt(BigDecimal num) {
         double w;
-        BigDecimal z= new BigDecimal(0);
+        BigDecimal z= new BigDecimal("0.0");
         BigDecimal work1 = num;
         w = Math.floor(Double.parseDouble(String.valueOf(num)));
         BigDecimal work2 = BigDecimal.valueOf(w);
-        if (work1.subtract(work2) == z) {
+        BigDecimal w3 = work1.subtract(work2);
+        if (w3 .compareTo(z) == 0) {
             return true;
         }
         return false;
