@@ -105,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
                     value = "-";
                     break;
                 case R.id.times:
-                    value = "*";
+                    value = "×";
                     break;
                 case R.id.divided:
-                    value = "/";
+                    value = "÷";
                     break;
                 case R.id.equal:
                     value = "=";
@@ -226,10 +226,10 @@ public class MainActivity extends AppCompatActivity {
             case "-":
                 work1 = work1.subtract(work2);
                 break;
-            case "*":
+            case "×":
                 work1 = work1.multiply(work2);
                 break;
-            case "/":
+            case "÷":
                 work1 = work1.divide(work2, 10, BigDecimal.ROUND_HALF_UP);
 //                work1 = work1.divide(work2);
                 break;
@@ -259,8 +259,8 @@ public class MainActivity extends AppCompatActivity {
         switch (symbol) {
             case "+":
             case "-":
-            case "*":
-            case "/":
+            case "×":
+            case "÷":
                 return true;
             default:
                 return false;
